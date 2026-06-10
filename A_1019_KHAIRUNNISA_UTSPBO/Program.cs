@@ -1,109 +1,126 @@
-﻿//Console.WriteLine("Hello, World!");
+using System;
+using System.Collections.Generic;
+    abstract class PesananTransportasi
+    {
+        // Encapsulation 
+        private string namaPenumpang;
+        private string idPesanan;
+        private string lokasiTujuan;
 
-//Sebuah perusahaan teknologi bernama OOPRide mengembangkan sistem aplikasi untuk layanan transportasi online. Sistem ini harus mencatat data penumpang, jenis layanan kendaraan, serta menghitung tarif perjalanan berdasarkan jarak tempuh dan jenis kendaraan yang dipesan. Anda diminta untuk merancang program berbasis OOP menggunakan empat pilar utama (Encapsulation, Inheritance, Polymorphism, dan Abstraction). Adapun syarat yang harus dipenuhi sebagai berikut: 1.Encapsulation  Buatlah kelas PesananTransportasi yang memiliki atribut yang bersifat private: ● namaPenumpang ● idPesanan ● lokasiTujuan Sediakan getter dan setter agar data dapat diakses dengan aman. Tambahkan metode tampilInfo() untuk menampilkan informasi pesanan. 2. Inheritance  Buatlah dua kelas turunan dari PesananTransportasi, yaitu: ● LayananMotor: layanan ojek online roda dua. ● LayananMobil : layanan taksi online roda empat. Masing-masing kelas memiliki atribut tambahan: ● LayananMotor: tarifPerKm ● LayananMobil: tarifPerKm, biayaTol Gunakan konsep pewarisan untuk mengambil atribut dasar dari PesananTransportasi. 3. Polymorphism Tambahkan metode hitungTarif() yang didefinisikan di kelas induk PesananTransportasi (sebagai metode abstrak). Override metode tersebut pada kelas turunan dengan rumus berbeda: ● LayananMotor: total = jarakKm × tarifPerKm ● LayananMobil: total = (jarakKm × tarifPerKm) + biayaTol 4. Abstraction Jadikan kelas PesananTransportasi sebagai kelas abstrak agar tidak bisa diinstansiasi langsung. Kelas ini harus memiliki: ● Metode abstrak hitungTarif() ● Metode umum tampilInfo() 5. Tambahan (optional) Buat kelas RiwayatPerjalanan yang menyimpan: ● jenisLayanan(Motor / Mobil) ● jarakKm ● tanggalPesan Hubungkan kelas ini dengan PesananTransportasi menggunakan composition. Tambahkan metode tambahPerjalanan() dan cetakRiwayat(). 
-abstract class PesananTransportasi
-{
-    private string namaPenumpang
-    {
-        get; set;
-    }
-    
-    private string idPesanan
-    {
-        get; set;
-    }
-    private string lokasiTujuan
-    {
-        get; set;
-    }
+        public string NamaPenumpang
+        {
+            get { return namaPenumpang; }
+            set { namaPenumpang = value; }
+        }
+        public string IdPesanan
+        {
+            get { return idPesanan; }
+            set { idPesanan = value; }
+        }
+        public string LokasiTujuan
+        {
+            get { return lokasiTujuan; }
+            set { lokasiTujuan = value; }
+        }
 
-    public void tampilInfo(string namaPenumpang, string idPesanan, string lokasiTujuan)
-    {
-        Console.WriteLine($"Nama: {namaPenumpang} | ID: {idPesanan} | Tujuan: {lokasiTujuan}");
-    }
-
-    public virtual double HitungTarif(double jarakKm)
-    {
-        return jarakKm * 10;
-    }
-
-}
-
-class LayananMotor : PesananTransportasi
-{
-    private double tarifPerKm
-    {
-        get; set;
-    }
-    public override double HitungTarif(double jarakKm)
-    {
-        return jarakKm * tarifPerKm;
-    }
-}
-
-class LayananMobil : PesananTransportasi
-{
-    private double tarifPerKm
-    {
-        get; set;
-    }
-    private double biayaTol
-    {
-        get; set;
+        // Constructor
+        public PesananTransportasi(string namaPenumpang, string idPesanan, string lokasiTujuan)
+        {
+            NamaPenumpang = namaPenumpang;
+            IdPesanan = idPesanan;
+            LokasiTujuan = lokasiTujuan;
+        }
+        // Method umum
+        public void TampilInfo()
+        {
+            Console.WriteLine("Nama : " + NamaPenumpang + "| ID : " + IdPesanan + " | Tujuan : " + LokasiTujuan);
+        }
+        //  Metode Abstract
+        public abstract double HitungTarif(double jarakKm);
     }
 
-    
-    public void HitungTarif(double jarakKm)
-    {   
-        tarifPerKm += 600;
-        biayaTol = 500;
-        Console.WriteLine($"Total: Rp {(jarakKm * tarifPerKm) + biayaTol}");
-    }
-}
+    //Inheritance 
+    class LayananMotor : PesananTransportasi
+    {
+        public double TarifPerKm { get; set; }
+        public LayananMotor(string namaPenumpang, string idPesanan, string lokasiTujuan, double tarifPerKm) : base(namaPenumpang, idPesanan, lokasiTujuan)
+        {
+            TarifPerKm = tarifPerKm;
+        }
+        public override double HitungTarif(double jarakKm)
+        {
+            return jarakKm * TarifPerKm;
+        }
+    } 
+    class LayananMobil : PesananTransportasi
+    {
+        public double TarifPerKm { get; set; }
+        public double BiayaTol { get; set; }
+        public LayananMobil(string namaPenumpang,string idPesanan,string lokasiTujuan,double tarifPerKm,double biayaTol) : base(namaPenumpang, idPesanan, lokasiTujuan)
+        {
+            TarifPerKm = tarifPerKm;
+            BiayaTol = biayaTol;
+        }
 
-class RiwayatPerjalanan
-{
-    private string jenisLayanan
-    {
-        get; set;
+        // Polymorphism
+        public override double HitungTarif(double jarakKm)
+        {
+            return (jarakKm * TarifPerKm) + BiayaTol;
+        }
     }
-    private double jarakKm
-    {
-        get; set;
-    }
-    private string tanggalPesan
-    {
-        get; set;
-    }
-    public void tambahPerjalanan(string jenisLayanan, double jarakKm, string tanggalPesan)
-    {
-        this.jenisLayanan = jenisLayanan;
-        this.jarakKm = jarakKm;
-        this.tanggalPesan = tanggalPesan;
-    }
-    public void cetakRiwayat()
-    {
-        Console.WriteLine($"1. {jenisLayanan} | {jarakKm} km | {tanggalPesan} ");
-    }
-}
 
-class Program
-{
+    class RiwayatPerjalanan
+    {
+        public string JenisLayanan { get; set; }
+        public double JarakKm { get; set; }
+        public DateTime TanggalPesan { get; set; }
+        public RiwayatPerjalanan(string jenisLayanan, double jarakKm)
+        {
+            JenisLayanan = jenisLayanan;
+            JarakKm = jarakKm;
+            TanggalPesan = DateTime.Now;
+        }
+    }
+    class ManajemenRiwayat
+    {
+        private List<RiwayatPerjalanan> daftarRiwayat =
+        new List<RiwayatPerjalanan>();
+        public void TambahPerjalanan(RiwayatPerjalanan perjalanan)
+{ 
+            daftarRiwayat.Add(perjalanan);
+        }
+        public void CetakRiwayat()
+        {
+            foreach (var item in daftarRiwayat)
+            {
+                Console.WriteLine(
+                $" {item.JenisLayanan} | {item.JarakKm} Km | {item.TanggalPesan} ");
+            }
+        }
+    }
+
+    class Program
+    {
     static void Main(string[] args)
     {
-        //LayananMotor motor = new LayananMotor();            
-        //motor.TampilInfo("Aca", "TRX01", "sTASIUN");
-        //Console.WriteLine($"Total: Rp{motor.HitungTarif(10)}");
-
-        LayananMobil mobil = new LayananMobil();
-        //mobil.(tarifPerKm) = 50.0;
-        
-        mobil.tampilInfo("Budi", "TRX01", "Stasiun");
-        mobil.HitungTarif(10);
-        RiwayatPerjalanan riwayat = new RiwayatPerjalanan();
-        riwayat.tambahPerjalanan("Mobil", 10, "10-10-2025");
-        riwayat.cetakRiwayat();
-
-        //
+        LayananMobil mobil = new LayananMobil(
+        "Budi",
+        "TRX01",
+        "Stasiun",
+        6000,
+        5000);
+        double jarakMobil = 10;
+        //Console.WriteLine("\n===== PESANAN MOBIL =====");
+        mobil.TampilInfo();
+        //Console.WriteLine("Jarak : " + jarakMobil + " Km");
+        Console.WriteLine("Total : Rp " +
+        mobil.HitungTarif(jarakMobil));
+        // Riwayat perjalanan
+        ManajemenRiwayat riwayat = new ManajemenRiwayat();
+        //riwayat.TambahPerjalanan(
+        // new RiwayatPerjalanan("Motor", jarakMotor));
+        riwayat.TambahPerjalanan(
+        new RiwayatPerjalanan("Mobil", jarakMobil));
+        riwayat.CetakRiwayat();
     }
 }
